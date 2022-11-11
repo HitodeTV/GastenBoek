@@ -1,7 +1,3 @@
-<?php
-require "./php/form.php";
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,23 +12,26 @@ require "./php/form.php";
 <h1>Gastenboek</h1>
 
 <div class="form-Inputs" >
-    <form action="">
+    <form action="" method="post">
         <label for="Firstname-input">Firstname:</label>
         <input type="text" id="firstname-Input" name="firstname-Input">
 
         <label for="Lastname-input">Lastname:</label>
-        <input type="text" id="lastname-Input" name="lastname-Input">
+        <input type="text" id="lastname-Input" name="lastname-Input" value="">
 
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <textarea name="message" id="message" cols="30" rows="10"></textarea>
 
-        <input type="submit" value="Submit" class="button">
+        <input type="submit" value="Submit" class="button" name="submit">
 
-        <?php checkIfPostSet();?>
     </form>
 </div>
 
-
-
+<div>
+    <?php
+            require "./php/form.php";
+            displayData($allUsersJson);
+    ?>
+</div>
 
 </body>
 </html>
