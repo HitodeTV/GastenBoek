@@ -1,16 +1,27 @@
 <?php
 
-require "./php/ClassUserMessage.php";
+require "ClassUserMessage.php";
 
-$jsonFileLocation = './JSON/GastenBoek.JSON';
+$replace = array('{firstname}', '{lastname}', '{message}');
+$values = array('', '', '');
+
+$jsonFileLocation = '../JSON/GastenBoek.JSON';
 $allUsersJson = file_get_contents($jsonFileLocation, true);
+$template = file_get_contents('../gastenboek.php');
+
+function makeDataValid($inputData) {
+    $inputData = trim($inputData);
+    $inputData = stripslashes($inputData);
+    $inputData = htmlspecialchars($inputData);
+    return $inputData;
+}
 
 
 function checkIfPostSet($jsonFileLocation, $allUsersJson) {
 
-    $firstNameInput = $_POST['firstname-Input'];
-    $lastNameInput = $_POST['lastname-Input'];
-    $messageTextarea = $_POST['message'];
+    $firstNameInput = makeDataValid($_POST['firstname-Input']);
+    $lastNameInput = makeDataValid($_POST['lastname-Input']);
+    $messageTextarea = makeDataValid($_POST['message']);
 
     $messageIDs = countUserIds($jsonFileLocation, $allUsersJson);
 
@@ -42,12 +53,12 @@ function newUserMessage(int $messageID,  string $firstname, string $lastname, st
 
 function saveMessageData($newMessageObject) {
 
-    $jsonFileLocation = './JSON/GastenBoek.JSON';
+    $jsonFileLocation = '../JSON/GastenBoek.JSON';
     $allUsersJson = file_get_contents($jsonFileLocation, true);
 
     $encodeJson = json_encode($newMessageObject);
 
-    $allUsersJson .= "\n" . "/" . $encodeJson;
+    $allUsersJson .= $encodeJson . "\n";
   
     file_put_contents($jsonFileLocation, $allUsersJson);
 
@@ -57,13 +68,40 @@ function saveMessageData($newMessageObject) {
 
 function displayData($allUsersJson) {
 
-    echo $allUsersJson;
+    $singleUserMessage = explode("\n", $allUsersJson);
 
 
-    // $location = "gastenboek.php";
-    // header("Location: $location");
 
-    // $userMessage = json_decode($allUsersJson);
+        foreach ($singleUserMessage as $singleMessage) {
+
+            $userMessage = json_decode($singleMessage);
+
+
+                if(!$userMessage == null){
+                    
+                    echo 
+            
+                    "<div class='displayCompleteMessage'>
+
+                    <div class='nameSection'>
+                        <p class='fatLetters'>Firstname:</p>
+                        <p>$userMessage->firstname</p>
+                        <p class='fatLetters'>Lastname:</p>
+                        <p>$userMessage->lastname</p>
+                    </div>
+                    <div class='messageSection'>
+                        <p class='fatLetters'>Message:</p>
+                        <p>$userMessage->userMessage</p>
+                        <button class='btn btn-danger'>Delete message</button>
+                    </div>
+                </div>";
+
+                }
+
+            
+        }
+
+
 }
 
 
@@ -71,7 +109,7 @@ function countUserIds($jsonFileLocation, $allUsersJson) {
 
     $messageIDs = -1;
 
-    $singleUserMessage = explode('/', $allUsersJson);
+    $singleUserMessage = explode("\n", $allUsersJson);
 
         foreach ($singleUserMessage as $userMessage) {
             
@@ -84,8 +122,18 @@ function countUserIds($jsonFileLocation, $allUsersJson) {
 
 if (isset($_POST['submit'])) {
 
+    $values = array($_POST['firstname-Input'], $_POST['lastname-Input'], $_POST['message']);
+
     checkIfPostSet($jsonFileLocation, $allUsersJson);
-    
+
+    header('Location: ./gastenboekform.php');
+
 }
+
+$replacedString = str_replace($replace, $values, $template);
+
+echo $replacedString;
+
+displayData($allUsersJson);
 
 ?>

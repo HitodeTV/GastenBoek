@@ -1,6 +1,6 @@
 <?php
 
-require "./php/InterfaceUserDetails.php";
+require "InterfaceUserDetails.php";
 
 class UserMessage implements UserDetails, JsonSerializable {
     private $messageID;
