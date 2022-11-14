@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<h1>Gastenboek</h1>
+<h1 class="siteTitle">Gastenboek</h1>
 
 <div class="margin-between-elements">
     <form action="./GastenBoekForm.php" method="post">
