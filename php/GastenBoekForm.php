@@ -29,17 +29,18 @@ function checkIfPostSet($jsonFileLocation, $allUsersJson) {
         }
 }
 
+
 function newUserMessage(int $messageID,  string $firstname, string $lastname, string $userMessage) {
 
     $newMessageObject = new UserMessage($messageID, $firstname, $lastname, $userMessage);
 
-    saveData($newMessageObject);
+    saveMessageData($newMessageObject);
 
     return $newMessageObject;
 }
 
 
-function saveData($newMessageObject) {
+function saveMessageData($newMessageObject) {
 
     $jsonFileLocation = './JSON/GastenBoek.JSON';
     $allUsersJson = file_get_contents($jsonFileLocation, true);
@@ -65,6 +66,7 @@ function displayData($allUsersJson) {
     // $userMessage = json_decode($allUsersJson);
 }
 
+
 function countUserIds($jsonFileLocation, $allUsersJson) {
 
     $messageIDs = -1;
@@ -79,8 +81,11 @@ function countUserIds($jsonFileLocation, $allUsersJson) {
     return $messageIDs;
 }
 
+
 if (isset($_POST['submit'])) {
+
     checkIfPostSet($jsonFileLocation, $allUsersJson);
+    
 }
 
 ?>

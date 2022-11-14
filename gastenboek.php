@@ -21,14 +21,15 @@
 
         <textarea name="message" id="message" cols="30" rows="10"></textarea>
 
-        <input type="submit" value="Submit" class="button" name="submit">
+        <button value="Submit" class="button" name="submit">Submit</button>
+        
 
     </form>
 </div>
 
 <div>
     <?php
-            require "./php/form.php";
+            require "./php/GastenBoekForm.php";
             displayData($allUsersJson);
     ?>
 </div>
