@@ -7,7 +7,8 @@ $values = array('', '', '');
 
 $jsonFileLocation = '../JSON/GastenBoek.JSON';
 $allUsersJson = file_get_contents($jsonFileLocation, true);
-$template = file_get_contents('../gastenboek.php');
+$template = file_get_contents('../gastenboek.html');
+
 
 function makeDataValid($inputData) {
     $inputData = trim($inputData);
@@ -70,39 +71,57 @@ function displayData($allUsersJson) {
 
     $singleUserMessage = explode("\n", $allUsersJson);
 
-
-
         foreach ($singleUserMessage as $singleMessage) {
 
             $userMessage = json_decode($singleMessage);
 
-
-                if(!$userMessage == null){
-                    
-                    echo 
-            
-                    "<div class='displayCompleteMessage'>
-
-                    <div class='nameSection'>
-                        <p class='fatLetters'>Firstname:</p>
-                        <p>$userMessage->firstname</p>
-                        <p class='fatLetters'>Lastname:</p>
-                        <p>$userMessage->lastname</p>
-                    </div>
-                    <div class='messageSection'>
-                        <p class='fatLetters'>Message:</p>
-                        <p>$userMessage->userMessage</p>
-                        <button class='btn btn-danger'>Delete message</button>
-                    </div>
-                </div>";
+                if(!$userMessage == null) {
+                        
+                    theMessageLayout($userMessage);
 
                 }
-
             
         }
 
+}
+
+
+function theMessageLayout ($userMessage) {
+
+    $singleMessageID;
+    $test;
+
+    $test = 100;
+    
+    $singleMessageID = $userMessage->messageID;
+    // echo $singleMessageID;
+
+    $theMessageLayout = 
+    "<form action='./GastenBoekForm.php' method='post'>
+        <div class='displayCompleteMessage'>
+
+            <div class='nameSection'>
+                <p class='fatLetters'>Firstname:</p>
+                <p>$userMessage->firstname</p>
+                <p class='fatLetters'>Lastname:</p>
+                <p>$userMessage->lastname</p>
+            </div>
+            <div class='messageSection'>
+                <p class='fatLetters'>Message:</p>
+                <p>$userMessage->userMessage</p>
+                
+                <input type='hidden' name='messageID' value='$singleMessageID'>
+                <button name='btn-MessageDelete' id='btn-MessageDelete' class='btn btn-danger'>Delete message</button>
+            </div>
+        </div>
+    </form>";
+
+    echo $theMessageLayout;
+
+    return $singleMessageID;
 
 }
+
 
 
 function countUserIds($jsonFileLocation, $allUsersJson) {
@@ -117,6 +136,54 @@ function countUserIds($jsonFileLocation, $allUsersJson) {
         }
 
     return $messageIDs;
+}
+
+
+function deleteSelectedMessage($allUsersJson) {
+
+    $arr = array();
+
+    $singleMessageID = $_POST['messageID'];
+
+    $singleUserMessage = explode("\n", $allUsersJson);  
+
+    foreach($singleUserMessage as $singleMessage) {
+
+        $userMessage = json_decode($singleMessage);
+
+
+
+        if(!$singleMessage == null) {
+
+            if($userMessage->messageID == $singleMessageID) {
+
+                $singleMessage = '';
+
+            }
+
+        }
+        
+            array_push($arr, $singleMessage);
+
+    }
+
+
+        $tojson = implode("\n", $arr);
+
+        print_r($tojson);
+
+        file_put_contents('../JSON/GastenBoek.JSON', $tojson);
+
+        header('Location: ./gastenboekform.php');
+
+}
+
+
+
+if (isset($_POST['btn-MessageDelete'])) {
+
+    deleteSelectedMessage($allUsersJson);
+
 }
 
 
