@@ -28,7 +28,7 @@ function checkIfPostSet($jsonFileLocation, $allUsersJson) {
 
         if (!empty($firstNameInput) && !empty($lastNameInput) && !empty($messageTextarea)) {
 
-            $newUserMessage = newUserMessage(
+            newUserMessage(
                 (int)$messageIDs, 
                 (string)$firstNameInput, 
                 (string)$lastNameInput,
@@ -87,11 +87,6 @@ function displayData($allUsersJson) {
 
 
 function theMessageLayout ($userMessage) {
-
-    $singleMessageID;
-    $test;
-
-    $test = 100;
     
     $singleMessageID = $userMessage->messageID;
     // echo $singleMessageID;
@@ -141,7 +136,7 @@ function countUserIds($jsonFileLocation, $allUsersJson) {
 
 function deleteSelectedMessage($allUsersJson) {
 
-    $arr = array();
+    $deleteMessageArray = array();
 
     $singleMessageID = $_POST['messageID'];
 
@@ -162,13 +157,12 @@ function deleteSelectedMessage($allUsersJson) {
             }
 
         }
-        
-            array_push($arr, $singleMessage);
+
+        array_push($deleteMessageArray, $singleMessage);
 
     }
 
-
-        $tojson = implode("\n", $arr);
+        $tojson = implode("\n", $deleteMessageArray);
 
         print_r($tojson);
 
